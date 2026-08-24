@@ -5,6 +5,6 @@
   "scripts": {
     "dev": "echo 'No dev server, static HTML site'",
     "build": "echo 'Build complete'",
-    "vercel-build": "echo 'Build complete'"
+    "vercel-build": "mkdir public && powershell -Command \"Get-ChildItem *.html | Copy-Item -Destination public\" && powershell -Command \"Get-ChildItem *.xml | Copy-Item -Destination public\" && powershell -Command \"Get-ChildItem browserconfig.xml | Copy-Item -Destination public\""
   }
 }
