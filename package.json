@@ -1,0 +1,10 @@
+{
+  "name": "ashok-studio",
+  "private": true,
+  
+  "scripts": {
+    "dev": "echo 'No dev server, static HTML site'",
+    "build": "echo 'Build complete'",
+    "vercel-build": "echo 'Build complete'"
+  }
+}

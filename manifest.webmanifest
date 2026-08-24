@@ -1,0 +1,21 @@
+{
+  "name": "PalSafar - Explore. Experience. Memories.",
+  "short_name": "PalSafar",
+  "description": "Discover hidden gems, plan unforgettable trips, and earn rewards.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf7ee",
+  "theme_color": "#001a3f",
+  "icons": [
+    {
+      "src": "/assets/brand/favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/brand/favicon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
