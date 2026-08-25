@@ -20,7 +20,7 @@
 </head>
 <body class="home-page">
   <div id="preloader">
-    <video id="preloaderVideo" autoplay muted playsinline webkit-playsinline class="preloader-vid">
+    <video id="preloaderVideo" autoplay="autoplay" muted="muted" playsinline="playsinline" webkit-playsinline="true" disablePictureInPicture class="preloader-vid">
       <source src="assets/preloader.mp4" type="video/mp4">
     </video>
   </div>
@@ -30,7 +30,16 @@
     } else {
       sessionStorage.setItem('palsafarPreloaderShown', 'true');
       var v = document.getElementById('preloaderVideo');
-      if (v) { v.muted = true; v.play().catch(function(){}); }
+      if (v) { 
+        v.muted = true; 
+        var playPromise = v.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(function(error) {
+            // Autoplay blocked by mobile browser (e.g. Low Power Mode). Skip preloader!
+            document.getElementById('preloader').style.display = 'none';
+          });
+        }
+      }
     }
   </script>
   <a href="#home" class="skip-link">Skip to content</a>
@@ -621,6 +630,7 @@
   <script src="js/main.js?v=22"></script>
 </body>
 </html>
+
 
 
 
