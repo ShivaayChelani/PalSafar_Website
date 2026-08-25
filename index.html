@@ -31,18 +31,6 @@
       sessionStorage.setItem('palsafarPreloaderShown', 'true');
     }
   </script>
-  <div id="preloader">
-    <video autoplay muted playsinline class="preloader-vid">
-      <source src="assets/preloader.mp4" type="video/mp4">
-    </video>
-  </div>
-  <script>
-    if (sessionStorage.getItem('palsafarPreloaderShown')) {
-      document.getElementById('preloader').remove();
-    } else {
-      sessionStorage.setItem('palsafarPreloaderShown', 'true');
-    }
-  </script>
   <a href="#home" class="skip-link">Skip to content</a>
 
   <header class="header" id="top">
@@ -631,6 +619,7 @@
   <script src="js/main.js?v=22"></script>
 </body>
 </html>
+
 
 
 
