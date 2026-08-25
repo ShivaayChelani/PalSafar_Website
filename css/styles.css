@@ -3662,6 +3662,9 @@ input, textarea, select {
   height: 100%;
   object-fit: cover;
 }
+.preloader-vid::-webkit-media-controls { display: none !important; }
+.preloader-vid::-webkit-media-controls-start-playback-button { display: none !important; }
+
 
 
 

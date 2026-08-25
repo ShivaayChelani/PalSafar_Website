@@ -20,7 +20,7 @@
 </head>
 <body class="home-page">
   <div id="preloader">
-    <video autoplay muted playsinline class="preloader-vid">
+    <video id="preloaderVideo" autoplay muted playsinline webkit-playsinline class="preloader-vid">
       <source src="assets/preloader.mp4" type="video/mp4">
     </video>
   </div>
@@ -29,6 +29,8 @@
       document.getElementById('preloader').remove();
     } else {
       sessionStorage.setItem('palsafarPreloaderShown', 'true');
+      var v = document.getElementById('preloaderVideo');
+      if (v) { v.muted = true; v.play().catch(function(){}); }
     }
   </script>
   <a href="#home" class="skip-link">Skip to content</a>
@@ -619,6 +621,7 @@
   <script src="js/main.js?v=22"></script>
 </body>
 </html>
+
 
 
 
