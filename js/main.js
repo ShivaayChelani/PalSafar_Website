@@ -366,26 +366,6 @@
   }
 })();
 
-
-window.addEventListener('load', () => {
-  const preloader = document.getElementById('preloader');
-  const preloaderVid = preloader?.querySelector('video');
-  
-  if (preloader && preloaderVid) {
-    let isFading = false;
-    const fadeOut = () => {
-      if (isFading) return;
-      isFading = true;
-      preloader.classList.add('fade-out');
-      setTimeout(() => preloader.remove(), 600);
-    };
-    
-    preloaderVid.addEventListener('ended', fadeOut);
-    
-    // In case video doesn't play or is very long, set a maximum fallback time
-    setTimeout(fadeOut, 5000); 
-  } else if (preloader) {
-    preloader.classList.add('fade-out');
-    setTimeout(() => preloader.remove(), 600);
-  }
-});
+/* The intro overlay is owned entirely by the inline script in index.html.
+   It used to also be handled here on window.load, which could never fire if
+   the load event had already happened, leaving the overlay stuck on screen. */

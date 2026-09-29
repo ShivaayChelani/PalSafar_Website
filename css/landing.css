@@ -1,4 +1,4 @@
-﻿/* PalSafar landing — coded UI + Three.js stages */
+/* PalSafar landing — coded UI + Three.js stages */
 
 .home-page {
   --cream: #FDF8F1;
@@ -157,6 +157,27 @@
   background: rgba(253,248,241,.98);
   border-bottom: 1px solid rgba(166,124,55,.14);
 }
+/* Mirror the desktop text-nav treatment (navy / 700 / gold accent) in the
+   mobile dropdown so it reads as the same navigation. Only applies where the
+   dropdown is actually used, so the desktop header is untouched. */
+@media (max-width: 900px) {
+  .home-page .mobile-nav a:not(.btn) {
+    color: var(--navy);
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 13px 8px;
+    border-radius: 10px;
+    position: relative;
+  }
+  .home-page .mobile-nav a:not(.btn):hover,
+  .home-page .mobile-nav a:not(.btn).active {
+    color: var(--gold);
+    background: rgba(166,124,55,.07);
+  }
+  .home-page .mobile-nav a:not(.btn) + a:not(.btn) {
+    box-shadow: inset 0 1px 0 rgba(166,124,55,.12);
+  }
+}
 
 .btn-pill {
   display: inline-flex;
@@ -194,26 +215,29 @@
   background: linear-gradient(90deg, rgba(255,248,236,.08), rgba(255,244,220,.04) 45%, rgba(255,248,236,.18));
   pointer-events: none;
 }
+/* Desktop is the source of truth: a two-column hero (phone | copy). The same
+   ratio is kept at every width so mobile scales the composition down instead of
+   collapsing it into image-above-text. */
 .ps-hero-grid {
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
+  grid-template-columns: .82fr 1.18fr;
+  gap: clamp(10px, 2.4vw, 20px);
   align-items: center;
 }
 .ps-hero-stage {
-  height: min(65vh, 600px);
-  min-height: 420px;
+  height: auto;
+  min-height: 0;
   display: grid;
   place-items: center;
-  padding-top: 28px;
+  padding-top: 8px;
   perspective: 1400px;
 }
 .ps-hero-stage .hero-phone-img {
-  height: min(620px, 72vh);
-  width: auto;
-  max-width: 100%;
+  height: auto;
+  width: 100%;
+  max-width: min(330px, 100%);
   object-fit: contain;
   transform-origin: center center;
   filter: drop-shadow(-18px 28px 42px rgba(4, 25, 54, 0.34));
@@ -246,13 +270,12 @@
   display: block;
 }
 .ps-hero-copy {
-  text-align: center;
+  text-align: left;
   max-width: 620px;
-  margin: 0 auto;
-  order: -1;
+  margin: 0;
+  order: 0;
   position: relative;
   padding: 12px 0;
-  
 }
 .ps-badge {
   display: inline-flex;
@@ -292,12 +315,12 @@
   font-size: clamp(.92rem, 1.05vw, 1.08rem);
   line-height: 1.6;
   max-width: 460px;
-  margin: 0 auto 22px;
+  margin: 0 0 22px;
 }
 .ps-hero-actions {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-start;
   gap: 12px 18px;
 }
@@ -309,32 +332,33 @@
   margin: 28px auto 0;
   max-width: 760px;
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
   background: rgba(255,250,240,.72);
   backdrop-filter: blur(14px);
   border: 1px solid rgba(255,255,255,.55);
   border-radius: 28px;
-  padding: 14px 18px;
+  padding: 14px 16px;
   box-shadow: 0 16px 40px rgba(12,30,61,.1);
 }
-.ps-stat { display: flex; align-items: center; justify-content: center; gap: 12px; }
-.ps-stat strong { display: block; font-size: 1.2rem; color: var(--navy); }
-.ps-stat span:last-child { font-size: .75rem; font-weight: 600; color: #5b5044; }
-.ps-stat-ico { display: grid; place-items: center; }
-.ps-stat-ico svg { width: 34px; height: 34px; stroke-width: 2px; }
+.ps-stat { display: flex; align-items: center; justify-content: center; gap: clamp(6px, 1.6vw, 12px); min-width: 0; }
+.ps-stat strong { display: block; font-size: clamp(.95rem, 3vw, 1.2rem); color: var(--navy); }
+.ps-stat span:last-child { font-size: clamp(.66rem, 1.6vw, .75rem); font-weight: 600; color: #5b5044; }
+.ps-stat-ico { display: grid; place-items: center; flex: 0 0 auto; }
+.ps-stat-ico svg { width: clamp(24px, 8vw, 34px); height: clamp(24px, 8vw, 34px); stroke-width: 2px; }
+.ps-stat + .ps-stat { border-left: 1px solid rgba(12,30,61,.12); }
 
 @media (min-width: 901px) {
   .ps-hero { padding-top: calc(var(--header-h) + 12px); }
-  .ps-hero-stage { padding-top: 48px; }
+  .ps-hero-stage { height: min(65vh, 600px); min-height: 420px; padding-top: 48px; }
+  .ps-hero-stage .hero-phone-img { height: min(620px, 72vh); width: auto; max-width: 100%; }
   .ps-hero-grid { grid-template-columns: .82fr 1.18fr; }
   .ps-hero-copy { text-align: left; margin: 0; order: 0; padding: 40px 0 0; }
   .ps-hero-copy p { margin-left: 0; margin-right: 0; }
   .ps-hero-actions { justify-content: flex-start; }
   .ps-hero-vendor { align-items: flex-start; }
   .ps-hero-vendor small { text-align: left; }
-  .ps-stats { grid-template-columns: repeat(3, 1fr); border-radius: 32px; padding: 24px 32px; margin: 70px auto 0; max-width: 860px; }
-  .ps-stat + .ps-stat { border-left: 1px solid rgba(12,30,61,.12); }
+  .ps-stats { grid-template-columns: repeat(3, 1fr); gap: 12px; border-radius: 32px; padding: 24px 32px; margin: 70px auto 0; max-width: 860px; }
 }
 
 .ps-cream { position: relative; background: var(--cream); padding: clamp(56px, 8vw, 110px) 0; overflow: hidden; }
@@ -346,7 +370,7 @@
 .ps-deco-left { left: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 260'%3E%3Cpath fill='none' stroke='%23A67C37' stroke-width='1.4' d='M100 20 L40 90 Q30 110 40 140 L40 240 L160 240 L160 140 Q170 110 160 90 Z'/%3E%3C/svg%3E"); }
 .ps-deco-right { right: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 260'%3E%3Cpath fill='none' stroke='%23A67C37' stroke-width='1.3' d='M30 220 L70 140 L110 220 M70 140 L70 80 Q90 40 110 80 L110 140'/%3E%3C/svg%3E"); }
 
-.how-grid { display: grid; grid-template-columns: 1fr; gap: 18px; margin-bottom: 22px; }
+.how-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-bottom: 22px; }
 .how-card { background: #FBF6EE; border-radius: 28px; padding: 22px 20px 18px; box-shadow: 0 14px 32px rgba(12,30,61,.06); border: 1px solid rgba(166,124,55,.08); display: flex; flex-direction: column; }
 .how-top { display: flex; justify-content: space-between; align-items: center; color: var(--gold); font-size: .68rem; font-weight: 700; letter-spacing: .12em; margin-bottom: 12px; }
 .how-top span { background: rgba(166,124,55,.12); border: 1px solid rgba(166,124,55,.22); border-radius: 8px; padding: 4px 8px; }
@@ -362,7 +386,7 @@
   object-fit: contain;
 }
 
-.audience-grid { display: grid; grid-template-columns: 1fr; gap: 18px; }
+.audience-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
 .audience-card { background: #FBF6EE; border-radius: 28px; padding: 22px; display: grid; gap: 16px; align-items: center; box-shadow: 0 14px 32px rgba(12,30,61,.06); border: 1px solid rgba(166,124,55,.08); }
 .aud-ico { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: #fff; box-shadow: 0 6px 14px rgba(12,30,61,.08); margin-bottom: 10px; }
 .audience-copy h3 { font-family: var(--serif); font-size: 1.5rem; color: var(--navy); margin-bottom: 8px; }
@@ -375,9 +399,31 @@
 }
 .audience-photo img { width: 100%; height: 100%; object-fit: contain; display: block; }
 @media (min-width: 760px) { .how-grid { grid-template-columns: repeat(2, 1fr); } .audience-card { grid-template-columns: 1fr auto; } }
-@media (min-width: 1101px) { 
-  .how-grid { grid-template-columns: repeat(4, 1fr); } 
-  .audience-grid { grid-template-columns: repeat(2, 1fr); }
+@media (min-width: 1101px) { .how-grid { grid-template-columns: repeat(4, 1fr); } }
+/* Desktop between 901-1100px keeps the original single full-width audience
+   card; only phones get the scaled two-up composition. */
+@media (min-width: 901px) and (max-width: 1100px) { .audience-grid { grid-template-columns: 1fr; } }
+/* Keep the same grid compositions on phones by scaling the cards down,
+   not by stacking them into single columns. */
+@media (max-width: 759px) {
+  .how-grid { gap: 12px; margin-bottom: 18px; }
+  .how-card { padding: 14px 12px 12px; border-radius: 22px; }
+  .how-top { font-size: .58rem; letter-spacing: .08em; margin-bottom: 8px; }
+  .how-top span { padding: 3px 6px; border-radius: 6px; }
+  .how-ico { width: 24px; height: 24px; border-radius: 6px; font-size: .8rem; }
+  .how-card h3 { font-size: .96rem; margin-bottom: 6px; }
+  .how-card > p { font-size: .76rem; line-height: 1.45; margin-bottom: 12px; }
+  .how-visual { min-height: 96px; border-radius: 14px; }
+  .how-visual img { height: 104px; }
+  /* Cards stay side by side, so the photo drops under the copy inside the
+     card and scales with the card instead of sitting in a fixed 168px box. */
+  .audience-card { padding: 14px 12px 12px; gap: 10px; border-radius: 22px; }
+  .aud-ico { width: 28px; height: 28px; margin-bottom: 6px; }
+  .aud-ico svg { width: 15px; height: 15px; }
+  .audience-copy h3 { font-size: 1rem; margin-bottom: 4px; }
+  .audience-copy p { font-size: .74rem; line-height: 1.4; margin-bottom: 10px; }
+  .audience-copy .btn-pill { padding: 9px 12px; font-size: .7rem; }
+  .audience-photo { width: 100%; max-width: 168px; height: auto; aspect-ratio: 1; margin: 0 auto; }
 }
 
 .ps-explore { overflow: hidden; padding-top: 24px; padding-bottom: 40px; }
@@ -519,6 +565,33 @@
 .home-page .ps-faqs details p { margin: 0; padding: 0 14px 12px; color: var(--muted); font-size: .8rem; line-height: 1.5; }
 .ps-faq-art { height: 100%; inset: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 400'%3E%3Cpath fill='none' stroke='%23A67C37' stroke-width='1' stroke-dasharray='3 6' d='M20 300 C200 280, 300 80, 760 90'/%3E%3Ccircle cx='760' cy='90' r='5' fill='%23A67C37'/%3E%3C/svg%3E"); background-position: right 8% top 20%; background-size: 55% auto; }
 @media (min-width: 901px) { .faq-grid { grid-template-columns: repeat(3, 1fr); } }
+
+/* Tablet / large-phone range. The desktop multi-column compositions are kept
+   here and scaled down, rather than falling back to the stacked phone layout. */
+@media (min-width: 640px) and (max-width: 900px) {
+  .faq-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .home-page .faq-col { padding: 14px; gap: 8px; }
+  .faq-head h3 { font-size: 1.02rem; }
+  .home-page .ps-faqs summary { font-size: .78rem; padding: 10px 11px; }
+  .home-page .ps-faqs details p { padding: 0 11px 10px; font-size: .75rem; }
+}
+
+/* The three-up explore composition only has room for the floating cards from
+   768px up; between 640-767 the middle column is too narrow and the cards
+   overflow their track, so the section stays stacked there. */
+@media (min-width: 768px) and (max-width: 900px) {
+  .explore-stage {
+    grid-template-columns: minmax(0, 1fr) minmax(0, .82fr) minmax(0, 1fr);
+    gap: 16px;
+    align-items: center;
+  }
+  .explore-phone { width: 100%; max-width: 230px; }
+  .explore-left, .explore-right { align-items: stretch; }
+  .explore-left .float-card, .explore-right .float-card { max-width: none; min-width: 0; }
+  .map-canvas { height: 112px; }
+  .float-body { padding: 12px 12px 12px 6px; }
+  .float-tag { padding: 10px 6px; font-size: .58rem; }
+}
 
 .ps-footer {
   background: var(--cream);
@@ -721,7 +794,7 @@
 }
 .ai-card {
   display: grid;
-  grid-template-columns: 72px 1fr;
+  grid-template-columns: 72px minmax(0, 1fr);
   gap: 8px;
   background: #fff;
   border-radius: 16px;
@@ -745,7 +818,7 @@
 }
 .cat-row {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 4px;
   text-align: center;
   margin-bottom: 10px;
@@ -767,7 +840,7 @@
 .cat-row small { display: block; font-size: 7px; font-weight: 700; line-height: 1.15; color: var(--navy); }
 .near-head { display: flex; justify-content: space-between; font-size: 9px; font-weight: 800; margin-bottom: 6px; }
 .near-head span { color: var(--gold); font-weight: 700; }
-.near-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.near-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
 .near-row figure { margin: 0; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 12px rgba(4,25,54,.08); }
 .near-row img { width: 100%; height: 58px; object-fit: cover; display: block; }
 .near-row figcaption { padding: 5px 6px 7px; font-size: 8px; font-weight: 800; line-height: 1.2; }
@@ -779,7 +852,7 @@
   right: 0;
   height: 52px;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   align-items: center;
   background: rgba(255,252,246,.96);
   border-top: 1px solid rgba(4,25,54,.06);
@@ -812,7 +885,7 @@
 .dark-cats { display: flex; gap: 6px; overflow: hidden; margin-bottom: 8px; }
 .dark-cats span { flex: 0 0 auto; background: #2a2a2a; color: #f4ead8; border-radius: 999px; padding: 5px 8px; font-size: 8px; font-weight: 700; }
 .dark-cats span:first-child { background: var(--gold); color: #fff; }
-.continue-card { display: grid; grid-template-columns: 70px 1fr; gap: 8px; background: #222; border-radius: 14px; overflow: hidden; margin-bottom: 10px; }
+.continue-card { display: grid; grid-template-columns: 70px minmax(0, 1fr); gap: 8px; background: #222; border-radius: 14px; overflow: hidden; margin-bottom: 10px; }
 .continue-card img { width: 100%; height: 70px; object-fit: cover; }
 .continue-card div { padding: 8px 8px 8px 0; display: flex; flex-direction: column; justify-content: center; gap: 3px; }
 .continue-card b { font-size: 11px; }
@@ -822,7 +895,7 @@
 .seg-dark i { font-style: normal; font-size: 8px; font-weight: 700; padding: 4px 8px; border-radius: 999px; background: #2a3142; color: #c9bfae; }
 .seg-dark i.on { background: var(--gold); color: #fff; }
 .spark { width: 100%; height: 52px; display: block; margin: 4px 0 8px; }
-.mini-stats, .vstats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; text-align: center; }
+.mini-stats, .vstats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; text-align: center; }
 .mini-stats span, .vstats small { font-size: 8px; color: #c9bfae; }
 .vstats b { display: block; color: #fff; font-size: 12px; }
 .reel-row small { color: #c9bfae; }
@@ -843,11 +916,17 @@
 .seg i.on { background: var(--gold); color: #fff; }
 .studio-card-light { background: #ffffff; border-radius: 14px; padding: 12px; margin-bottom: 12px; box-shadow: 0 12px 28px rgba(12,30,61,.06); border: 1px solid rgba(166,124,55,.1); }
 .collab-light { background: #ffffff; border-radius: 12px; padding: 10px; margin-bottom: 12px; box-shadow: 0 12px 28px rgba(12,30,61,.06); border: 1px solid rgba(166,124,55,.1); display: flex; align-items: center; gap: 10px; }
-.reel-row-light { display: grid; grid-template-columns: 52px 1fr; gap: 10px; background: #ffffff; border-radius: 12px; overflow: hidden; margin-bottom: 10px; box-shadow: 0 12px 28px rgba(12,30,61,.06); border: 1px solid rgba(166,124,55,.1); }
+.reel-row-light { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 10px; background: #ffffff; border-radius: 12px; overflow: hidden; margin-bottom: 10px; box-shadow: 0 12px 28px rgba(12,30,61,.06); border: 1px solid rgba(166,124,55,.1); }
 .reel-row-light > img { width: 52px; height: 52px; object-fit: cover; border-radius: 8px; margin: 8px 0 8px 8px; }
 .reel-row-light > div { padding: 6px 6px 6px 0; display: flex; flex-direction: column; justify-content: center; }
 .reel-row-light b { display: block; font-size: 10px; color: var(--navy); margin-bottom: 2px; }
 .reel-row-light small { color: #8a8176; font-size: 7.5px; margin-bottom: 4px; display: block; }
+/* Let the avatar/handle row shrink so it is never clipped by the card edge
+   when the device mockup is rendered at a smaller width on phones. */
+@media (max-width: 900px) {
+  .reel-row-light > div > div { min-width: 0; }
+  .reel-row-light > div > div > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
 .mini-stats-new { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; text-align: center; }
 .mini-stats-new div { color: var(--navy); }
 .mini-stats-new span { font-size: 8px; color: var(--navy); display:block; margin-bottom:2px; }
@@ -885,11 +964,34 @@
     radial-gradient(circle, var(--gold) 2.5px, transparent 3px) center / 10px 10px no-repeat;
 }
 @media (max-width: 900px) {
-  .device-bezel, .device.tilt .device-bezel, .explore-phone .device-bezel { transform: none; }
+  .explore-phone .device-bezel { transform: none; }
   .hero-plane { display: none; }
-  .split-phones { flex-wrap: wrap; }
-  .split-phones .device { width: min(230px, 78vw); height: 480px; }
+  /* The in-app mockup screens are laid out with fixed px, so their stat grids
+     must be allowed to shrink when the device frame is narrower on phones. */
+  .mini-stats-new { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .vstats-light { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  /* Keep both device mockups side by side (the desktop composition). The
+     in-app screens are fixed-px designs, so scale the whole frame with `zoom`:
+     the UI then shrinks as one piece instead of overflowing its bezel, and the
+     layout box stays in sync with the painted size. */
+  .split-phones { flex-wrap: nowrap; gap: clamp(4px, 1.5vw, 10px); min-height: 0; }
+  .split-phones .device {
+    flex: 0 0 auto;
+    width: 250px;
+    height: 520px;
+    zoom: .56;
+  }
+  /* A fixed-degree 3D bevel only eats into the neighbouring card once the
+     frame is scaled below 100%, so flatten it like the explore phone does. */
+  .split-phones .device-bezel,
+  .split-phones .device.tilt .device-bezel { transform: none; }
+  .split-phones .device.tilt { margin-top: clamp(12px, 3vw, 24px); }
 }
+@media (min-width: 360px) and (max-width: 900px) { .split-phones .device { zoom: .64; } }
+@media (min-width: 400px) and (max-width: 900px) { .split-phones .device { zoom: .70; } }
+@media (min-width: 420px) and (max-width: 900px) { .split-phones .device { zoom: .78; } }
+@media (min-width: 520px) and (max-width: 900px) { .split-phones .device { zoom: .88; } }
+@media (min-width: 640px) and (max-width: 900px) { .split-phones .device { zoom: 1; } }
 
 
 .ps-hero-copy h1 em { position: relative; }
@@ -1084,6 +1186,103 @@
   border-radius: 50%;
   font-size: 1rem;
   font-weight: 700;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PHONE / TABLET SCALING
+   Declared after the base rules on purpose: the hero decoration and the
+   float animation are declared late in this file, so an earlier media
+   block would be overridden by them and silently do nothing.
+   Everything below scales the desktop composition down — it does not
+   reorder, restack or re-style it.
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  /* The hero keeps its two columns; only the copy is tuned to the narrower
+     column. The h1 uses the same 4.5vw ramp as desktop so the type size is
+     continuous across the 901px switch. */
+  .ps-hero-copy { padding: 6px 0; }
+  .ps-badge {
+    font-size: .6rem;
+    padding: 5px 10px;
+    gap: 5px;
+    border-radius: 12px;
+    line-height: 1.35;
+    margin-bottom: 12px;
+  }
+  .ps-badge svg { width: 11px; height: 11px; }
+  .ps-hero-copy h1 { font-size: clamp(1.05rem, 4.5vw, 2.9rem); margin-bottom: 10px; }
+  .ps-hero-copy h1 em::after { bottom: -4px; height: 8px; }
+  .ps-hero-copy p { font-size: clamp(.76rem, 2.5vw, 1rem); line-height: 1.5; margin-bottom: 16px; }
+  .ps-hero-actions { gap: 10px 12px; }
+  .ps-hero-actions .btn-pill { padding: 10px 14px; font-size: .78rem; gap: 6px; }
+  .ps-hero-actions .btn-pill svg { width: 14px; height: 14px; }
+  .ps-hero-vendor { gap: 4px; }
+  .ps-hero-vendor small { font-size: .72rem; max-width: 100%; }
+  .ps-hero-vendor small::after { bottom: -6px; height: 6px; }
+
+  /* The dashed flourish is anchored to the copy on desktop; tuck it inside
+     the column on phones so it is not cut off by the hero's overflow clip. */
+  .ps-hero-copy::before { right: 0; top: -14px; width: 130px; height: 65px; opacity: .7; }
+
+  /* A 20px float is a big jump for a ~120px-wide phone mockup. */
+  .ps-hero-stage .hero-phone-img { animation-name: floatPhoneSm; }
+  .ps-hero-stage { padding-top: 4px; }
+  .ps-hero-stage .hero-phone-img { filter: drop-shadow(-8px 14px 22px rgba(4, 25, 54, 0.3)); }
+}
+@keyframes floatPhoneSm {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-9px); }
+}
+
+@media (max-width: 900px) {
+  /* The stats bar is already a 3-up on desktop; shrink the internals so each
+     cell fits its column instead of overflowing it. */
+  .ps-stats { margin: 20px auto 0; padding: 12px 8px; border-radius: 20px; gap: 6px; }
+  .ps-stat { gap: clamp(3px, 1.2vw, 10px); }
+  .ps-stat > div { min-width: 0; }
+  .ps-stat strong { font-size: clamp(.82rem, 2.6vw, 1.1rem); }
+  .ps-stat span:last-child { font-size: clamp(.58rem, 1.5vw, .72rem); line-height: 1.2; }
+  .ps-stat-ico svg { width: clamp(17px, 5.2vw, 30px); height: clamp(17px, 5.2vw, 30px); }
+
+  /* Section spacing and decorative flourishes scale with the viewport. */
+  .ps-deco { width: 130px; height: 165px; top: 14px; }
+  .ps-mountains { height: 120px; }
+  .ps-explore { padding-top: 18px; padding-bottom: 28px; }
+  .explore-phone { width: min(230px, 66vw); }
+  .explore-stage { gap: 16px; }
+  .explore-left, .explore-right { gap: 14px; }
+  .map-canvas { height: 118px; }
+
+  /* Footer: same single centred row of items, just tighter. */
+  .ps-footer { padding: 14px 0; }
+  .ps-footer-row { gap: 10px 12px; }
+  .ps-legal { font-size: .72rem; }
+  .ps-legal a + a::before { margin: 0 7px; }
+  .ps-foot-badge, .ps-copy { font-size: .72rem; }
+  .ps-hash { font-size: .78rem; }
+}
+
+@media (min-width: 901px) and (max-width: 1023px) {
+  .home-page .ps-hero-copy::before {
+    right: 0;
+    width: clamp(140px, 18vw, 184px);
+  }
+  .home-page .split-layout {
+    grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+    gap: clamp(18px, 2.7vw, 28px);
+  }
+  .home-page .split-layout > * { min-width: 0; }
+  .home-page .split-list { margin-left: clamp(64px, 10vw, 96px); }
+  .home-page .split-list li { gap: clamp(16px, 2.5vw, 24px); }
+  .home-page .split-list li > div { min-width: 0; }
+  .home-page .split-phones {
+    min-width: 0;
+    gap: clamp(10px, 1.4vw, 14px);
+  }
+  .home-page .split-phones .device {
+    width: clamp(185px, 23vw, 220px);
+    height: clamp(385px, 47.84vw, 457px);
+  }
 }
 
 

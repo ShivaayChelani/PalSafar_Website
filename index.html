@@ -10,38 +10,106 @@
   <meta property="og:title" content="Pal Safar — Explore · Experience · Memories" />
   <meta property="og:description" content="Discover hidden gems, plan unforgettable trips, and earn rewards on every journey." />
   <meta property="og:image" content="https://www.palsafar.in/assets/brand/og-image.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="assets/brand/favicon.ico" sizes="any" />
   <link rel="icon" href="assets/brand/logo-icon.png" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&display=swap" rel="stylesheet" />
   <link rel="preload" href="assets/backgrounds/hero-banner-new.png" as="image" fetchpriority="high" />
   <link rel="stylesheet" href="css/styles.css?v=22" />
-  <link rel="stylesheet" href="css/landing.css?v=22" />
+  <link rel="stylesheet" href="css/landing.css?v=23" />
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2935504274830921" crossorigin="anonymous"></script>
 </head>
 <body class="home-page">
-  <div id="preloader">
-    <video id="preloaderVideo" autoplay="autoplay" muted="muted" playsinline="playsinline" webkit-playsinline="true" disablePictureInPicture class="preloader-vid">
-      <source src="assets/preloader.mp4" type="video/mp4">
-    </video>
+  <div id="preloader" aria-hidden="true" role="presentation">
   </div>
   <script>
-    if (sessionStorage.getItem('palsafarPreloaderShown')) {
-      document.getElementById('preloader').remove();
-    } else {
-      sessionStorage.setItem('palsafarPreloaderShown', 'true');
-      var v = document.getElementById('preloaderVideo');
-      if (v) { 
-        v.muted = true; 
-        var playPromise = v.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(function(error) {
-            // Autoplay blocked by mobile browser (e.g. Low Power Mode). Skip preloader!
-            document.getElementById('preloader').style.display = 'none';
-          });
-        }
+    /* Intro clip. Decorative only: it is fixed-position and out of flow, so it
+       never shifts the page, and every path below ends in the same idempotent
+       dismiss(). Two independent ceilings (JS timers here, a CSS animation in
+       styles.css) guarantee it can never be left on screen. */
+    (function () {
+      var el = document.getElementById('preloader');
+      if (!el) return;
+
+      var KEY = 'palsafarPreloaderShown';
+      var CEILING_MS = 4000;   /* hard cap, independent of window.onload */
+      var INTRO_MS = 2500;     /* how long the clip may play once it starts */
+      var FADE_MS = 600;       /* matches the opacity transition in styles.css */
+
+      var timer = null;
+      var done = false;
+
+      function arm(ms) {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(dismiss, ms);
       }
-    }
+
+      function dismiss() {
+        if (done) return;
+        done = true;
+        if (timer) { clearTimeout(timer); timer = null; }
+        var v = el.querySelector('video');
+        if (v) { try { v.pause(); } catch (e) {} }
+        /* Cancel the no-JS failsafe first: a running animation outranks the
+           .fade-out declarations and would hold the overlay at opacity 1. */
+        el.style.animation = 'none';
+        el.classList.add('fade-out');
+        setTimeout(function () { el.remove(); }, FADE_MS + 50);
+      }
+
+      /* One intro per session. */
+      try {
+        if (sessionStorage.getItem(KEY)) { el.remove(); return; }
+        sessionStorage.setItem(KEY, '1');
+      } catch (e) { /* storage blocked (private mode) - just play the intro */ }
+
+      arm(CEILING_MS);
+
+      var v = el.querySelector('video');
+      if (!v) { dismiss(); return; }
+
+      /* A failed <source> fires `error` on the <source> itself, which does not
+         bubble, and browsers do not reliably re-fire it on the <video>.
+         Listening in the capture phase on the container is what actually
+         catches a 404/missing-clip. */
+      el.addEventListener('error', dismiss, true);
+      v.addEventListener('error', dismiss);
+      v.addEventListener('abort', dismiss);
+      v.addEventListener('ended', dismiss);
+
+      v.muted = true;
+
+      /* Not every browser reports a broken clip: Chromium can leave
+         networkState at NETWORK_NO_SOURCE with error still null, never fire an
+         `error` event, and leave the play() promise pending forever. Relying on
+         those alone held the overlay for the full ceiling, so poll the element
+         and leave as soon as it admits it has nothing to play. */
+      var NET_NO_SOURCE = 3;
+      function check() {
+        if (done || v.error || v.networkState === NET_NO_SOURCE) dismiss();
+      }
+      check();
+      var watch = setInterval(function () { check(); if (done) clearInterval(watch); }, 100);
+      setTimeout(function () { clearInterval(watch); }, 2000);
+
+      var started;
+      try { started = v.play(); } catch (e) { dismiss(); return; }
+
+      if (started && typeof started.then === 'function') {
+        /* Resolves once the clip is really playing; rejects when autoplay is
+           blocked (mobile low-power mode) or the media cannot be loaded. */
+        started.then(function () { arm(INTRO_MS); }).catch(function () {
+          /* An AbortError here just means we paused it ourselves on the way
+             out, so only bail out if we have not already decided to. */
+          if (!done) dismiss();
+        });
+      } else {
+        arm(INTRO_MS);
+      }
+    })();
   </script>
   <a href="#home" class="skip-link">Skip to content</a>
 
@@ -350,7 +418,7 @@
                       <img src="assets/screens/creator/creator_reel.png" alt="">
                       <div>
                         <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
-                          <img src="assets/screens/traveller/traveller_placecard.jpeg" style="width:12px; height:12px; border-radius:50%; margin:0;">
+                          <img src="assets/screens/traveller/traveller_placecard.jpeg" alt="" style="width:12px; height:12px; border-radius:50%; margin:0;">
                           <span style="font-size:7px; font-weight:700;">Creator</span>
                           <span style="font-size:6px; color:#a09a90;">@wanderwithme</span>
                           <span style="margin-left:auto; font-weight:900;">⋮</span>
@@ -367,7 +435,7 @@
                       <img src="assets/screens/traveller/travelle_map.jpeg" alt="">
                       <div>
                         <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
-                          <img src="assets/screens/traveller/traveller_placecard.jpeg" style="width:12px; height:12px; border-radius:50%; margin:0;">
+                          <img src="assets/screens/traveller/traveller_placecard.jpeg" alt="" style="width:12px; height:12px; border-radius:50%; margin:0;">
                           <span style="font-size:7px; font-weight:700;">Creator</span>
                           <span style="font-size:6px; color:#a09a90;">@roamclips</span>
                           <span style="margin-left:auto; font-weight:900;">⋮</span>
@@ -450,7 +518,7 @@
                     </div>
                     
                     <div class="offer-light" style="margin-bottom:8px; padding:8px;">
-                      <img src="assets/screens/traveller/traveller_placecard.jpeg" style="width:28px; height:28px; border-radius:6px;">
+                      <img src="assets/screens/traveller/traveller_placecard.jpeg" alt="" style="width:28px; height:28px; border-radius:6px;">
                       <div style="flex:1;">
                         <b style="font-size:8.5px; display:block; margin-bottom:2px;">Summer Special Offer</b>
                         <span style="font-size:7px; color:#6b6258;">10% OFF on cold brews</span>
