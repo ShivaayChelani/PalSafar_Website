@@ -7,7 +7,8 @@
       "namespace": "android_app",
       "package_name": "com.palsasafar",
       "sha256_cert_fingerprints": [
-        "66:40:A1:06:B2:3C:BF:E2:F0:70:B6:6D:29:A1:D2:11:0C:FA:04:42:8D:75:5E:B3:84:3D:E9:08:02:FE:0D:0D"
+        "66:40:A1:06:B2:3C:BF:E2:F0:70:B6:6D:29:A1:D2:11:0C:FA:04:42:8D:75:5E:B3:84:3D:E9:08:02:FE:0D:0D",
+        "0F:B3:1A:5F:A7:64:68:0D:2D:26:04:0E:DF:F5:E1:B8:C2:92:4C:BE:D5:43:2E:DC:97:B7:E4:B6:DC:2D:23:80"
       ]
     }
   }
