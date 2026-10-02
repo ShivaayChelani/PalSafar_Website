@@ -1,0 +1,22 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "G2MLFC7B5R.com.palsasafar",
+        "paths": [
+          "*",
+          "/place/*",
+          "/trip/*",
+          "/trip/shared/*",
+          "/offer/*",
+          "/vendor/*",
+          "/reel/*",
+          "/legal/*",
+          "/wallet",
+          "/rewards"
+        ]
+      }
+    ]
+  }
+}

@@ -24,7 +24,23 @@
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
+    },
+    {
+      "source": "/.well-known/(.*)",
+      "headers": [
+        { "key": "Content-Type", "value": "application/json; charset=utf-8" }
+      ]
     }
   ],
-  "redirects": []
+  "redirects": [],
+  "rewrites": [
+    {
+      "source": "/reel/:reelId",
+      "destination": "/"
+    },
+    {
+      "source": "/trip/shared/:token",
+      "destination": "/"
+    }
+  ]
 }
