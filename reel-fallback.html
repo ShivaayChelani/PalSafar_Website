@@ -29,7 +29,8 @@
   <script>
     (() => {
       const params = new URLSearchParams(window.location.search);
-      const reelId = params.get("reelId");
+      const pathMatch = /^\/reel\/([A-Za-z0-9_-]+)$/.exec(window.location.pathname);
+      const reelId = pathMatch ? pathMatch[1] : params.get("reelId");
       const safeId = /^[A-Za-z0-9_-]+$/.test(reelId || "");
       const message = document.getElementById("message");
       const title = document.getElementById("title");
