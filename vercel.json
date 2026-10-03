@@ -36,7 +36,7 @@
   "rewrites": [
     {
       "source": "/reel/:reelId",
-      "destination": "/reel-fallback.html?reelId=:reelId"
+      "destination": "/reel-fallback?reelId=:reelId"
     },
     {
       "source": "/trip/shared/:token",
